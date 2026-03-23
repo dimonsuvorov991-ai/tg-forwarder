@@ -1,23 +1,41 @@
-from telethon import TelegramClient, events
-from telethon.sessions import StringSession
-import os
+ if len(media_urls) > 1:
+        for i, media in enumerate(media_urls):
+            try:
+                if media.endswith(".mp4"):
+                    bot.send_video(chat_id=CHAT_ID, video=media, caption=text if i == 0 else "")
+                else:
+                    bot.send_photo(chat_id=CHAT_ID, photo=media, caption=text if i == 0 else "")
+                time.sleep(2)
+            except Exception as e:
+                print(e)
 
-api_id = int(os.getenv("API_ID"))
-api_hash = os.getenv("API_HASH")
-session = os.getenv("SESSION")
+    # если одно медиа
+    elif len(media_urls) == 1:
+        media = media_urls[0]
+        try:
+            if media.endswith(".mp4"):
+                bot.send_video(chat_id=CHAT_ID, video=media, caption=text)
+            else:
+                bot.send_photo(chat_id=CHAT_ID, photo=media, caption=text)
+        except:
+            bot.send_message(chat_id=CHAT_ID, text=text)
 
-source_channel = os.getenv("SOURCE")
-target_channel = os.getenv("TARGET")
+    # если нет медиа
+    else:
+        bot.send_message(chat_id=CHAT_ID, text=text)
 
-client = TelegramClient(StringSession(session), api_id, api_hash)
 
-@client.on(events.NewMessage(chats=source_channel))
-async def handler(event):
-    try:
-        await client.forward_messages(target_channel, event.message)
-    except Exception as e:
-        print(e)
+while True:
+    feed = feedparser.parse(RSS_URL)
 
-client.start()
-print("Bot started...")
-client.run_until_disconnected()
+    for entry in reversed(feed.entries):
+        if entry.link not in posted:
+            try:
+                send_post(entry)
+                posted.add(entry.link)
+                time.sleep(5)
+            except Exception as e:
+                print(e)
+
+    time.sleep(30)
+
