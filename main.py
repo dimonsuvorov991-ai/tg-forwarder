@@ -3,7 +3,7 @@ import time
 from telegram import Bot
 
 TOKEN = "8754633021:AAHIvzlS7Xft0eYpWtXPOMjgyEYMTx4eBSc"
-CHAT_ID = "-5191302267"
+CHAT_ID = -5191302267
 RSS_URL = "https://rsshub.app/telegram/channel/Rhythmsssssss"
 
 bot = Bot(token=TOKEN)
