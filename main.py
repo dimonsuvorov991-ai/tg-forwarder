@@ -1,5 +1,6 @@
 import feedparser
 import time
+import requests
 from telegram import Bot
 
 TOKEN = "8754633021:AAHIvzlS7Xft0eYpWtXPOMjgyEYMTx4eBSc"
@@ -8,7 +9,10 @@ RSS_URL = "https://rsshub.app/telegram/channel/Rhythmsssssss"
 
 bot = Bot(token=TOKEN)
 print("CHAT_ID:", CHAT_ID)
-bot.send_message(chat_id=CHAT_ID, text="ТЕСТ")
+requests.post(
+    f"https://api.telegram.org/bot{TOKEN}/sendMessage",
+    data={"chat_id": CHAT_ID, "text": "ТЕСТ"}
+)
 
 posted = set()
 
