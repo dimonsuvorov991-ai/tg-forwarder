@@ -9,6 +9,7 @@ RSS_URL = "https://rsshub.app/telegram/channel/Rhythmsssssss"
 bot = Bot(token=TOKEN)
 
 posted = set()
+bot.send_message(chat_id=CHAT_ID, text="ТЕСТ")
 
 def send_post(entry):
     text = entry.title if entry.title else ""
