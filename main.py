@@ -7,7 +7,7 @@ CHAT_ID = -5191302267
 RSS_URL = "https://rsshub.app/telegram/channel/Rhythmsssssss"
 
 bot = Bot(token=TOKEN)
-# ТЕСТ
+print("CHAT_ID:", CHAT_ID)
 bot.send_message(chat_id=CHAT_ID, text="ТЕСТ")
 
 posted = set()
