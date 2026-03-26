@@ -54,7 +54,7 @@ def send_post(entry):
 
 while True:
     feed = feedparser.parse(RSS_URL)
-     print("ENTRIES:", len(feed.entries))
+    print("ENTRIES:", len(feed.entries))
 
     for entry in reversed(feed.entries):
         if entry.link not in posted:
