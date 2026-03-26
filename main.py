@@ -53,6 +53,7 @@ def send_post(entry):
         send_message(text)
 
 while True:
+    print("ENTRIES:", len(feed.entries))
     feed = feedparser.parse(RSS_URL)
 
     for entry in reversed(feed.entries):
