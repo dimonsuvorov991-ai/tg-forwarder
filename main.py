@@ -3,7 +3,7 @@ import time
 import requests
 import re
 
-TOKEN = "8754633021:AAHIvzlS7Xft0eYpWtXPOMjgyEYMTx4eBSc"
+TOKEN = "ТВОЙ_ТОКЕН"
 CHAT_ID = -5191302267
 
 RSS_URLS = [
@@ -14,7 +14,13 @@ RSS_URLS = [
 seen = set()
 
 def clean_html(text):
-    return re.sub('<.*?>', '', text)
+    text = re.sub('<br ?/?>', '\n', text)
+    text = re.sub('<.*?>', '', text)
+
+    lines = text.split("\n")
+    lines = [line.strip() for line in lines]
+
+    return "\n".join([line for line in lines if line])
 
 def extract_images(text):
     return re.findall(r'<img.*?src="(.*?)"', text)
@@ -53,14 +59,7 @@ def send_post(entry):
     if "summary" in entry:
         raw = entry.summary
         images = extract_images(raw)
-       def clean_html(text):
-    text = re.sub('<br ?/?>', '\n', text)  # переносы
-    text = re.sub('<.*?>', '', text)
-
-    lines = text.split("\n")
-    lines = [line.strip() for line in lines]
-
-    return "\n".join([line for line in lines if line])
+        text = clean_html(raw)
     elif "title" in entry:
         text = entry.title
 
@@ -76,7 +75,7 @@ while True:
         feed = feedparser.parse(RSS_URL)
 
         if feed.entries:
-            for entry in reversed(feed.entries[:7]):  # берём последние 7 постов
+            for entry in reversed(feed.entries[:7]):
                 if entry.link not in seen:
                     print("NEW:", entry.link)
                     send_post(entry)
@@ -84,4 +83,3 @@ while True:
                     time.sleep(2)
 
     time.sleep(8)
-    
