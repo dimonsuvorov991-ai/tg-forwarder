@@ -53,7 +53,14 @@ def send_post(entry):
     if "summary" in entry:
         raw = entry.summary
         images = extract_images(raw)
-        text = clean_html(raw)
+       def clean_html(text):
+    text = re.sub('<br ?/?>', '\n', text)  # переносы
+    text = re.sub('<.*?>', '', text)
+
+    lines = text.split("\n")
+    lines = [line.strip() for line in lines]
+
+    return "\n".join([line for line in lines if line])
     elif "title" in entry:
         text = entry.title
 
