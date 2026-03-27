@@ -5,18 +5,19 @@ import re
 
 TOKEN = "8754633021:AAHIvzlS7Xft0eYpWtXPOMjgyEYMTx4eBSc"
 CHAT_ID = -5191302267
-RSS_URL = "https://rsshub.rssforever.com/telegram/channel/Rhythmsssssss"
 
-last_link = None
+RSS_URLS = [
+    "https://rsshub.rssforever.com/telegram/channel/Rhythmsssssss",
+    "https://rsshub.moeyy.xyz/telegram/channel/Rhythmsssssss"
+]
+
+seen = set()
 
 def clean_html(text):
     return re.sub('<.*?>', '', text)
 
 def extract_images(text):
     return re.findall(r'<img.*?src="(.*?)"', text)
-
-def extract_videos(text):
-    return re.findall(r'href="(https://.*?\.mp4)"', text)
 
 def send_message(text):
     requests.post(
@@ -30,16 +31,10 @@ def send_photo(url, caption=""):
         data={"chat_id": CHAT_ID, "photo": url, "caption": caption[:1000]}
     )
 
-def send_video(url, caption=""):
-    requests.post(
-        f"https://api.telegram.org/bot{TOKEN}/sendVideo",
-        data={"chat_id": CHAT_ID, "video": url, "caption": caption[:1000]}
-    )
-
 def send_album(images, text):
     media = []
 
-    for i, img in enumerate(images[:10]):  # Telegram лимит 10
+    for i, img in enumerate(images[:10]):
         media.append({
             "type": "photo",
             "media": img,
@@ -54,43 +49,32 @@ def send_album(images, text):
 def send_post(entry):
     text = ""
     images = []
-    videos = []
 
     if "summary" in entry:
         raw = entry.summary
         images = extract_images(raw)
-        videos = extract_videos(raw)
         text = clean_html(raw)
     elif "title" in entry:
         text = entry.title
 
-    # 🔥 1. альбом (если много фото)
     if len(images) > 1:
         send_album(images, text)
-
-    # 🔥 2. одно фото
     elif len(images) == 1:
         send_photo(images[0], text)
-
-    # 🔥 3. видео
-    elif videos:
-        send_video(videos[0], text)
-
-    # 🔥 4. просто текст
     else:
         send_message(text)
 
-
 while True:
-    feed = feedparser.parse(RSS_URL)
-    print("ENTRIES:", len(feed.entries))
+    for RSS_URL in RSS_URLS:
+        feed = feedparser.parse(RSS_URL)
 
-    if feed.entries:
-        entry = feed.entries[0]
+        if feed.entries:
+            for entry in reversed(feed.entries[:7]):  # берём последние 7 постов
+                if entry.link not in seen:
+                    print("NEW:", entry.link)
+                    send_post(entry)
+                    seen.add(entry.link)
+                    time.sleep(2)
 
-        if entry.link != last_link:
-            print("NEW POST:", entry.link)
-            send_post(entry)
-            last_link = entry.link
-
-    time.sleep(20)
+    time.sleep(8)
+    
