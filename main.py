@@ -70,8 +70,10 @@ def send_post(entry):
     elif "title" in entry:
         text = entry.title
 
-    if len(images) > 1:
-        send_album(images, text)
+   if len(images) > 1:
+    for i, img in enumerate(images):
+        send_photo(img, text if i == 0 else "")
+        time.sleep(2)
     elif len(images) == 1:
         send_photo(images[0], text)
     else:
