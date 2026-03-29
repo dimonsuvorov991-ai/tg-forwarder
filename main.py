@@ -26,7 +26,7 @@ def extract_images(text):
     return re.findall(r'<img.*?src="(.*?)"', text)
 
 def extract_audio(text):
-    return re.findall(r'href="(https://.*?\.(mp3|ogg|wav))"', text)
+    return re.findall(r'https://[^"]+', text)
 
 def extract_video(text):
     return re.findall(r'href="(https://.*?\.(mp4))"', text)
