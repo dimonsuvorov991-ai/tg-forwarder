@@ -33,7 +33,7 @@ def send_message(text):
 
 def send_photo(url, caption=""):
     try:
-        img = requests.get(url).content
+        img = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}).content
 
         requests.post(
             f"https://api.telegram.org/bot{TOKEN}/sendPhoto",
@@ -42,21 +42,6 @@ def send_photo(url, caption=""):
         )
     except Exception as e:
         print("PHOTO ERROR:", e)
-
-    send_album(images, text)
-    media = []
-
-    for i, img in enumerate(images[:10]):
-        media.append({
-            "type": "photo",
-            "media": img,
-            "caption": text if i == 0 else ""
-        })
-
-    requests.post(
-        f"https://api.telegram.org/bot{TOKEN}/sendMediaGroup",
-        json={"chat_id": CHAT_ID, "media": media}
-    )
 
 def send_post(entry):
     text = ""
@@ -69,12 +54,14 @@ def send_post(entry):
     elif "title" in entry:
         text = entry.title
 
-   if len(images) > 1:
-    for i, img in enumerate(images):
-        send_photo(img, text if i == 0 else "")
-        time.sleep(2)
+    if len(images) > 1:
+        for i, img in enumerate(images):
+            send_photo(img, text if i == 0 else "")
+            time.sleep(2)
+
     elif len(images) == 1:
         send_photo(images[0], text)
+
     else:
         send_message(text)
 
