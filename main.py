@@ -43,8 +43,7 @@ def send_photo(url, caption=""):
     except Exception as e:
         print("PHOTO ERROR:", e)
 
-if len(images) > 1:
-    send_album(images, text)
+    send_album(images, text):
     media = []
 
     for i, img in enumerate(images[:10]):
