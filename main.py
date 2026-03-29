@@ -32,12 +32,19 @@ def send_message(text):
     )
 
 def send_photo(url, caption=""):
-    requests.post(
-        f"https://api.telegram.org/bot{TOKEN}/sendPhoto",
-        data={"chat_id": CHAT_ID, "photo": url, "caption": caption[:1000]}
-    )
+    try:
+        img = requests.get(url).content
 
-def send_album(images, text):
+        requests.post(
+            f"https://api.telegram.org/bot{TOKEN}/sendPhoto",
+            data={"chat_id": CHAT_ID, "caption": caption[:1000]},
+            files={"photo": ("image.jpg", img)}
+        )
+    except Exception as e:
+        print("PHOTO ERROR:", e)
+
+if len(images) > 1:
+    send_album(images, text)
     media = []
 
     for i, img in enumerate(images[:10]):
