@@ -97,7 +97,6 @@ def send_post(entry):
     elif len(images) > 1:
         for i, img in enumerate(images):
             send_photo(img, text if i == 0 else "")
-            time.sleep(2)
 
     # 📸 одно фото
     elif len(images) == 1:
@@ -109,14 +108,19 @@ def send_post(entry):
 
 while True:
     for RSS_URL in RSS_URLS:
-        feed = feedparser.parse(RSS_URL)
+        feed = feedparser.parse(
+    RSS_URL,
+    request_headers={
+        "User-Agent": "Mozilla/5.0"
+    }
+)
 
         if feed.entries:
-            for entry in reversed(feed.entries[:7]):
+            for entry in reversed(feed.entries[:15]):
                 if entry.link not in seen:
                     print("NEW:", entry.link)
                     send_post(entry)
                     seen.add(entry.link)
-                    time.sleep(2)
+                    time.sleep(0.5)
 
-    time.sleep(8)
+    time.sleep(3)
