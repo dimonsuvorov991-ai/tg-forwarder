@@ -39,12 +39,26 @@ def send_message(text):
 
 def send_photo(url, caption=""):
     try:
-        img = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}).content
-        requests.post(
+        print("TRY PHOTO:", url)
+
+        response = requests.get(url, headers={
+            "User-Agent": "Mozilla/5.0"
+        }, timeout=10)
+
+        if response.status_code != 200:
+            print("BAD STATUS:", response.status_code)
+            return
+
+        img = response.content
+
+        r = requests.post(
             f"https://api.telegram.org/bot{TOKEN}/sendPhoto",
             data={"chat_id": CHAT_ID, "caption": caption[:1000]},
             files={"photo": ("image.jpg", img)}
         )
+
+        print("TG RESPONSE:", r.text)
+
     except Exception as e:
         print("PHOTO ERROR:", e)
 
@@ -71,6 +85,7 @@ def send_video(url, caption=""):
         print("VIDEO ERROR:", e)
 
 def send_post(entry):
+    print("IMAGES:", images)
     text = ""
     images = []
     audios = []
