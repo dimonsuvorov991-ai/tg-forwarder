@@ -8,7 +8,8 @@ CHAT_ID = -5191302267
 
 RSS_URLS = [
     "https://rsshub.rssforever.com/telegram/channel/Rhythmsssssss",
-    "https://rsshub.moeyy.xyz/telegram/channel/Rhythmsssssss"
+    "https://rsshub.moeyy.xyz/telegram/channel/Rhythmsssssss",
+    "https://rsshub.app/telegram/channel/Rhythmsssssss"
 ]
 
 seen = set()
