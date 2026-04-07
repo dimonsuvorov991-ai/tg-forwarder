@@ -85,11 +85,11 @@ def send_video(url, caption=""):
         print("VIDEO ERROR:", e)
 
 def send_post(entry):
-    print("IMAGES:", images)
     text = ""
     images = []
     audios = []
     videos = []
+    print("IMAGES:", images)
 
     if "summary" in entry:
         raw = entry.summary
