@@ -138,5 +138,6 @@ while True:
                     send_post(entry)
                     seen.add(entry.link)
                     time.sleep(0.5)
+                    print("ENTRIES:", len(feed.entries))
 
     time.sleep(3)
